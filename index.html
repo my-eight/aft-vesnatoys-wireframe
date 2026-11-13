@@ -28,37 +28,6 @@
       margin-inline: auto;
     }
 
-    .site-header {
-      background: #fff;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .header-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px 28px;
-      padding-block: 18px;
-    }
-
-    .brand { display: block; width: 143px; height: auto; }
-
-    .navigation {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 4px 10px;
-    }
-
-    .navigation a {
-      padding: 6px 9px;
-      border-radius: 8px;
-      font-size: .88rem;
-      font-weight: 700;
-      text-decoration: none;
-    }
-
-    .navigation a:hover { background: #eaf5f0; color: var(--dark-green); }
-
     main { padding-block: 32px 56px; }
 
     .hero {
@@ -71,6 +40,17 @@
       border-radius: 32px;
       background: linear-gradient(110deg, #eff9f3 20%, #dff3e8 100%);
       overflow: hidden;
+    }
+
+    .hero-brand {
+      display: block;
+      width: 165px;
+      max-width: 100%;
+      height: auto;
+      margin-bottom: 20px;
+      padding: 8px 11px;
+      border-radius: 12px;
+      background: #fff;
     }
 
     .hero h1 {
@@ -163,8 +143,9 @@
 
     @media (max-width: 740px) {
       .container { width: calc(100% - 32px); }
-      .header-inner { flex-wrap: wrap; }
+      main { padding-block: 20px 40px; }
       .hero { grid-template-columns: minmax(0, 1fr) auto; padding: 24px; }
+      .hero-brand { width: 146px; margin-bottom: 16px; }
       .hero-art { min-height: 110px; }
       .hero-art::before { width: 92px; height: 92px; }
       .hero-art::after { width: 32px; height: 32px; right: -8px; }
@@ -173,8 +154,6 @@
     }
 
     @media (max-width: 420px) {
-      .navigation { gap: 2px; }
-      .navigation a { padding-inline: 6px; }
       .hero { grid-template-columns: 1fr; }
       .hero-art { display: none; }
       .section { padding: 14px; }
@@ -182,20 +161,10 @@
   </style>
 </head>
 <body>
-  <header class="site-header">
-    <div class="container header-inner">
-      <img class="brand" src="assets/логотип.png" alt="Фабрика игрушек «Весна»" width="225" height="56">
-      <nav class="navigation" aria-label="Разделы индекса">
-        <a href="#pages">Страницы магазина</a>
-        <a href="#account">Личный кабинет</a>
-        <a href="#forms">Доступ к аккаунту</a>
-        <a href="#updated-blocks" hidden>Блоки действующего сайта</a>
-      </nav>
-    </div>
-  </header>
   <main class="container">
     <div class="hero">
       <div>
+        <img class="hero-brand" src="assets/логотип.png" alt="Фабрика игрушек «Весна»" width="225" height="56">
         <h1>Прототипы интернет-магазина</h1>
         <p>Выберите экран или форму. Прототип откроется в новой вкладке.</p>
       </div>
