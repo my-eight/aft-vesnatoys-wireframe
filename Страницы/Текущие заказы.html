@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Текущие заказы — прототип «Весна»</title>
+  <link rel="stylesheet" href="личный-кабинет.css">
+  <script src="личный-кабинет.js" defer></script>
+</head>
+<body data-view="current">
+  <div class="preview frame" role="group" aria-label="Состояние прототипа">
+    <span>Состояние прототипа</span>
+    <button class="button" type="button" id="show-filled" aria-pressed="true">Заполнено</button>
+    <button class="button" type="button" id="show-empty" aria-pressed="false">Пусто</button>
+  </div>
+  <header class="placeholder">хедер</header>
+  <main class="frame">
+    <nav class="breadcrumbs" aria-label="Хлебные крошки">
+      <span>Главная страница</span>
+      <span aria-hidden="true">/</span>
+      <a href="Текущие заказы.html">Личный кабинет</a>
+      <span aria-hidden="true">/</span>
+      <span aria-current="page">Текущие заказы</span>
+    </nav>
+    <h1>Текущие заказы</h1>
+    <div class="account-layout">
+      <div class="stack" id="orders" aria-label="Список текущих заказов"></div>
+      <nav class="account-nav" aria-label="Личный кабинет">
+        <a href="Личные данные.html">Личные данные</a>
+        <a href="Текущие заказы.html" aria-current="page">Текущие заказы</a>
+        <a href="История заказов.html">История заказов</a>
+        <button type="button" data-order-action="logout">Выйти</button>
+      </nav>
+    </div>
+  </main>
+  <footer class="placeholder">футер</footer>
+
+  <dialog id="order-dialog" aria-labelledby="dialog-title">
+    <form class="stack" id="order-action-form">
+      <h2 id="dialog-title"></h2>
+      <p id="dialog-description"></p>
+      <label class="field" id="dialog-message" hidden>Комментарий для менеджера
+        <textarea name="message" rows="3"></textarea>
+      </label>
+      <div class="actions">
+        <button class="button button--primary" type="submit" id="dialog-submit"></button>
+        <button class="button" type="button" id="dialog-close">Закрыть</button>
+      </div>
+    </form>
+  </dialog>
+</body>
+</html>

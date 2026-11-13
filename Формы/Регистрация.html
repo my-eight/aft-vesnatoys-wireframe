@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Регистрация — прототип «Весна»</title>
+  <link rel="stylesheet" href="../Страницы/личный-кабинет.css">
+  <style>
+    body {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      min-height: 100vh;
+    }
+    .registration { max-width: 580px; margin-top: clamp(32px, 5vw, 64px); }
+    .registration form { gap: 12px; }
+    .registration .field input { min-height: 54px; padding-inline: 16px; }
+    .registration .button { min-height: 50px; }
+    .login-link { margin-top: 24px; text-align: center; }
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+  <header class="placeholder">хедер</header>
+  <main class="frame">
+    <nav class="breadcrumbs" aria-label="Хлебные крошки">
+      <span>Главная страница</span>
+      <span aria-hidden="true">/</span>
+      <span aria-current="page">Регистрация</span>
+    </nav>
+    <h1>Регистрация</h1>
+    <div class="registration">
+      <div id="registration-entry">
+        <form class="stack" id="registration-form">
+          <label class="field">
+            <span class="visually-hidden">Имя</span>
+            <input name="first-name" autocomplete="given-name" placeholder="Имя *" pattern=".*\S.*" required>
+          </label>
+          <label class="field">
+            <span class="visually-hidden">Фамилия</span>
+            <input name="last-name" autocomplete="family-name" placeholder="Фамилия">
+          </label>
+          <label class="field">
+            <span class="visually-hidden">Телефон</span>
+            <input name="phone" type="tel" autocomplete="tel" placeholder="Телефон">
+          </label>
+          <label class="field">
+            <span class="visually-hidden">Электронная почта</span>
+            <input name="email" type="email" autocomplete="email" placeholder="Email *" required>
+          </label>
+          <label class="field">
+            <span class="visually-hidden">Пароль</span>
+            <input name="password" type="password" autocomplete="new-password" placeholder="Пароль *" required>
+          </label>
+          <label class="field">
+            <span class="visually-hidden">Подтверждение пароля</span>
+            <input name="confirmation" type="password" autocomplete="new-password" placeholder="Подтверждение пароля *" required>
+          </label>
+          <button class="button button--primary" type="submit" disabled>Зарегистрироваться</button>
+        </form>
+        <p class="login-link"><span class="muted">Уже есть аккаунт?</span> <a href="Вход.html">Войти</a></p>
+      </div>
+      <section class="panel stack empty" id="registration-success" aria-labelledby="success-title" hidden>
+        <h2 id="success-title" tabindex="-1">Регистрация завершена</h2>
+        <a class="button button--primary" href="Вход.html">Войти</a>
+      </section>
+    </div>
+  </main>
+  <footer class="placeholder">футер</footer>
+  <script>
+    const registrationForm = document.querySelector('#registration-form');
+    const password = registrationForm.elements.password;
+    const confirmation = registrationForm.elements.confirmation;
+    const entry = document.querySelector('#registration-entry');
+    const success = document.querySelector('#registration-success');
+
+    registrationForm.addEventListener('input', () => confirmation.setCustomValidity(''));
+    registrationForm.addEventListener('submit', event => {
+      event.preventDefault();
+      if (password.value !== confirmation.value) {
+        confirmation.setCustomValidity('Пароли не совпадают.');
+        confirmation.reportValidity();
+        return;
+      }
+      registrationForm.reset();
+      entry.hidden = true;
+      success.hidden = false;
+      success.querySelector('h2').focus();
+    });
+    registrationForm.querySelector('button').disabled = false;
+  </script>
+</body>
+</html>

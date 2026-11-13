@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Корзина — прототип «Весна»</title>
+  <link rel="stylesheet" href="личный-кабинет.css">
+  <style>
+    body {
+      display: grid;
+      grid-template-rows: auto auto 1fr auto;
+      min-height: 100vh;
+    }
+
+    .cart { display: grid; gap: 12px; }
+    .cart-bar, .cart-summary { padding: 20px clamp(16px, 3.4vw, 54px); }
+    .cart-bar, .cart-summary, .cart-items { border: 1px solid #888; }
+    .cart-count { font-weight: 700; }
+    .cart-items { margin: 0; padding: 0; list-style: none; }
+    .cart-item {
+      display: grid;
+      grid-template-columns: 56px minmax(180px, 1.4fr) minmax(112px, .8fr) auto auto minmax(86px, auto) auto;
+      grid-template-areas: "photo description sku quantity favorite total remove";
+      align-items: center;
+      gap: 16px;
+      padding: 20px clamp(16px, 3.4vw, 54px);
+    }
+    .cart-item + .cart-item { border-top: 1px solid #aaa; }
+    .cart-item .product-photo { grid-area: photo; width: 56px; }
+    .item-description { grid-area: description; display: grid; gap: 4px; }
+    .item-sku { grid-area: sku; font-size: 14px; }
+    .quantity {
+      grid-area: quantity;
+      display: grid;
+      grid-template-columns: auto 56px auto;
+      align-items: center;
+      gap: 6px;
+    }
+    .quantity-value { text-align: center; }
+    .quantity-value output { font-variant-numeric: tabular-nums; }
+    .icon-button { width: 42px; padding: 5px; font-size: 20px; line-height: 1; }
+    .favorite { grid-area: favorite; font-size: 25px; }
+    .item-total { grid-area: total; justify-self: end; white-space: nowrap; font-size: 20px; }
+    .remove { grid-area: remove; }
+    .cart-summary { display: grid; gap: 14px; }
+    .cart-total { font-size: 20px; }
+    .checkout { width: min(100%, 380px); }
+    .empty-cart { justify-items: start; }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+
+    @media (max-width: 940px) {
+      .cart-item {
+        grid-template-columns: 56px minmax(0, 1fr) auto auto;
+        grid-template-areas:
+          "photo description description remove"
+          "photo sku sku favorite"
+          ". quantity total total";
+        gap: 8px 12px;
+      }
+    }
+
+    @media (max-width: 440px) {
+      .cart-item {
+        grid-template-columns: 48px minmax(0, 1fr) auto auto;
+        grid-template-areas:
+          "photo description description remove"
+          "photo sku sku favorite"
+          "quantity quantity total total";
+      }
+      .cart-item .product-photo { width: 48px; }
+      .item-total { font-size: 17px; }
+      .quantity { justify-self: start; grid-template-columns: auto 36px auto; }
+      .icon-button { width: 36px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="preview frame" role="group" aria-label="Состояние прототипа">
+    <span>Состояние прототипа</span>
+    <button class="button" id="show-filled" type="button" aria-pressed="true">Заполнено</button>
+    <button class="button" id="show-empty" type="button" aria-pressed="false">Пусто</button>
+  </div>
+  <header class="placeholder">хедер</header>
+  <main class="frame">
+    <nav class="breadcrumbs" aria-label="Хлебные крошки">
+      <span>Главная страница</span>
+      <span aria-hidden="true">/</span>
+      <span aria-current="page">Корзина</span>
+    </nav>
+    <h1>Корзина</h1>
+
+    <section class="cart" id="cart" aria-label="Товары в корзине">
+      <div class="cart-bar actions spread">
+        <p class="cart-count" id="cart-count"></p>
+        <button class="button" id="clear-cart" type="button"><span aria-hidden="true">×&nbsp;</span>Очистить</button>
+      </div>
+      <ul class="cart-items" id="cart-items"></ul>
+      <div class="cart-summary">
+        <p class="cart-total">Итого <strong id="cart-total"></strong></p>
+        <a class="button button--primary checkout" href="Оформление заказа.html">Оформить заказ</a>
+      </div>
+    </section>
+    <section class="panel stack empty-cart" id="empty-cart" aria-labelledby="empty-title" hidden>
+      <h2 id="empty-title" tabindex="-1">Корзина пуста</h2>
+      <p>Добавьте товары, чтобы оформить заказ.</p>
+      <button class="button" type="button" disabled>В каталог</button>
+    </section>
+    <p class="sr-only" id="feedback" role="status"></p>
+  </main>
+  <footer class="placeholder">футер</footer>
+
+  <template id="cart-row">
+    <li class="cart-item">
+      <span class="product-photo" aria-hidden="true">Фото</span>
+      <div class="item-description">
+        <strong data-field="name"></strong>
+        <small data-field="unit-price"></small>
+      </div>
+      <span class="item-sku muted" data-field="sku"></span>
+      <div class="quantity" role="group">
+        <button class="button icon-button" type="button" data-action="minus">−</button>
+        <span class="quantity-value"><output data-field="quantity"></output> шт.</span>
+        <button class="button icon-button" type="button" data-action="plus">+</button>
+      </div>
+      <button class="button icon-button favorite" type="button" data-action="favorite">
+        <span aria-hidden="true"></span>
+      </button>
+      <strong class="item-total" data-field="total"></strong>
+      <button class="button icon-button remove" type="button" data-action="remove">
+        <span aria-hidden="true">×</span>
+      </button>
+    </li>
+  </template>
+
+  <script src="товары-заказа.js"></script>
+  <script>
+    const quantities = readOrderQuantities(location.search);
+    const favorites = new Set();
+    const plural = new Intl.PluralRules('ru-RU');
+    const itemWords = { one: 'товар', few: 'товара', many: 'товаров', other: 'товара' };
+    const list = document.querySelector('#cart-items');
+    const template = document.querySelector('#cart-row');
+    const cart = document.querySelector('#cart');
+    const empty = document.querySelector('#empty-cart');
+    const emptyTitle = document.querySelector('#empty-title');
+    const showFilled = document.querySelector('#show-filled');
+    const showEmpty = document.querySelector('#show-empty');
+    const clearCart = document.querySelector('#clear-cart');
+    const feedback = document.querySelector('#feedback');
+    const itemCount = document.querySelector('#cart-count');
+    const cartTotal = document.querySelector('#cart-total');
+    const checkout = document.querySelector('.checkout');
+
+    function renderRow(product) {
+      const { name, sku, price } = product;
+      const row = template.content.firstElementChild.cloneNode(true);
+      const quantity = quantities.get(sku);
+      const favorite = row.querySelector('[data-action="favorite"]');
+      const isFavorite = favorites.has(sku);
+      const minus = row.querySelector('[data-action="minus"]');
+
+      row.dataset.sku = sku;
+      row.querySelector('[data-field="name"]').textContent = name;
+      row.querySelector('[data-field="sku"]').textContent = 'Артикул ' + sku;
+      row.querySelector('[data-field="unit-price"]').textContent = orderMoney.format(price) + ' за шт.';
+      row.querySelector('[data-field="quantity"]').value = quantity;
+      row.querySelector('[data-field="total"]').textContent = orderMoney.format(price * quantity);
+      row.querySelector('.quantity').setAttribute('aria-label', 'Количество: ' + name);
+      minus.disabled = quantity === 1;
+      minus.setAttribute('aria-label', 'Уменьшить количество: ' + name);
+      row.querySelector('[data-action="plus"]').setAttribute('aria-label', 'Увеличить количество: ' + name);
+      row.querySelector('[data-action="remove"]').setAttribute('aria-label', 'Удалить: ' + name);
+      favorite.setAttribute('aria-pressed', isFavorite);
+      favorite.setAttribute('aria-label', (isFavorite ? 'Убрать из избранного: ' : 'Добавить в избранное: ') + name);
+      favorite.firstElementChild.textContent = isFavorite ? '♥' : '♡';
+      return row;
+    }
+
+    function render() {
+      const visibleProducts = orderProducts.filter(product => quantities.has(product.sku));
+      const hasItems = visibleProducts.length > 0;
+      cart.hidden = !hasItems;
+      empty.hidden = hasItems;
+      showFilled.setAttribute('aria-pressed', hasItems);
+      showEmpty.setAttribute('aria-pressed', !hasItems);
+      list.replaceChildren(...visibleProducts.map(renderRow));
+
+      const totals = visibleProducts.reduce((sum, product) => {
+        const quantity = quantities.get(product.sku);
+        sum.count += quantity;
+        sum.amount += product.price * quantity;
+        return sum;
+      }, { count: 0, amount: 0 });
+      itemCount.textContent = 'В корзине ' + totals.count + ' ' + itemWords[plural.select(totals.count)];
+      cartTotal.textContent = orderMoney.format(totals.amount);
+      checkout.href = 'Оформление заказа.html?' + orderCartQuery(quantities);
+    }
+
+    function fillCart() {
+      orderProducts.forEach(product => quantities.set(product.sku, 1));
+      render();
+    }
+
+    function emptyCart() {
+      quantities.clear();
+      render();
+    }
+
+    list.addEventListener('click', event => {
+      const button = event.target.closest('[data-action]');
+      if (!button) return;
+      const row = button.closest('.cart-item');
+      const { sku } = row.dataset;
+      const { action } = button.dataset;
+      const quantity = quantities.get(sku);
+      const nextSku = row.nextElementSibling?.dataset.sku ?? row.previousElementSibling?.dataset.sku;
+
+      if (action === 'favorite') {
+        if (favorites.has(sku)) {
+          favorites.delete(sku);
+          feedback.textContent = 'Товар убран из избранного.';
+        } else {
+          favorites.add(sku);
+          feedback.textContent = 'Товар добавлен в избранное.';
+        }
+      } else if (action === 'remove') {
+        quantities.delete(sku);
+        feedback.textContent = 'Товар удалён. ' + (quantities.size ? 'Итог пересчитан.' : 'Корзина пуста.');
+      } else {
+        const updatedQuantity = quantity + (action === 'plus' ? 1 : -1);
+        quantities.set(sku, updatedQuantity);
+        feedback.textContent = 'Количество: ' + updatedQuantity + '. Итог пересчитан.';
+      }
+
+      render();
+      const focusSku = action === 'remove' ? nextSku : sku;
+      const updatedRow = [...list.children].find(item => item.dataset.sku === focusSku);
+      const nextButton = updatedRow?.querySelector('[data-action="' + action + '"]:not(:disabled)')
+        ?? updatedRow?.querySelector('[data-action="plus"]')
+        ?? emptyTitle;
+      nextButton.focus();
+    });
+
+    showFilled.addEventListener('click', fillCart);
+    showEmpty.addEventListener('click', emptyCart);
+    clearCart.addEventListener('click', () => {
+      emptyCart();
+      emptyTitle.focus();
+    });
+    render();
+  </script>
+</body>
+</html>

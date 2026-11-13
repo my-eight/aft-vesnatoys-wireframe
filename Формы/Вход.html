@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Вход в личный кабинет — прототип «Весна»</title>
+  <link rel="stylesheet" href="../Страницы/личный-кабинет.css">
+  <style>
+    body {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      min-height: 100vh;
+    }
+    .login { max-width: 580px; margin-top: clamp(32px, 5vw, 64px); }
+    .login h2 { margin-bottom: 8px; }
+    .login form { margin-top: 16px; }
+    .remember { display: flex; align-items: center; gap: 10px; }
+    .remember input { width: 18px; height: 18px; margin: 0; accent-color: #222; }
+    .login-links { margin-top: 24px; text-align: center; }
+    .login-links p + p { margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <header class="placeholder">хедер</header>
+  <main class="frame">
+    <nav class="breadcrumbs" aria-label="Хлебные крошки">
+      <span>Главная страница</span>
+      <span aria-hidden="true">/</span>
+      <span aria-current="page">Вход в личный кабинет</span>
+    </nav>
+    <h1>Вход в личный кабинет</h1>
+    <section class="login" aria-labelledby="login-title">
+      <h2 id="login-title">Авторизация</h2>
+      <p class="muted">По электронной почте и паролю</p>
+      <form class="stack" id="login-form">
+        <label class="field">Электронная почта
+          <input type="email" name="email" autocomplete="username" placeholder="name@example.com" required>
+        </label>
+        <label class="field">Пароль
+          <input type="password" name="password" autocomplete="current-password" required>
+        </label>
+        <label class="remember"><input type="checkbox" name="remember">Запомнить меня</label>
+        <button class="button button--primary" type="submit" disabled>Войти</button>
+      </form>
+      <div class="login-links">
+        <p><span class="muted">Нет аккаунта?</span> <a href="Регистрация.html">Зарегистрируйтесь</a></p>
+        <p><a href="Восстановление доступа.html">Забыли пароль?</a></p>
+      </div>
+    </section>
+  </main>
+  <footer class="placeholder">футер</footer>
+  <script>
+    const loginForm = document.querySelector('#login-form');
+    loginForm.addEventListener('submit', event => {
+      event.preventDefault();
+      loginForm.reset();
+      location.href = '../Страницы/Текущие заказы.html';
+    });
+    loginForm.querySelector('button').disabled = false;
+  </script>
+</body>
+</html>

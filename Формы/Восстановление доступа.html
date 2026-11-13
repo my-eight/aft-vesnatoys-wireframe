@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Восстановление пароля — прототип «Весна»</title>
+  <link rel="stylesheet" href="../Страницы/личный-кабинет.css">
+  <style>
+    body {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      min-height: 100vh;
+    }
+
+    .recovery { max-width: 580px; }
+    .recovery h1 { margin-bottom: 16px; font-size: clamp(26px, 3vw, 32px); }
+    .recovery form { gap: 14px; }
+    .recovery .field input { min-height: 54px; padding-inline: 16px; }
+    .recovery form .button { min-height: 50px; }
+    .login-link { margin-top: 24px; text-align: center; }
+  </style>
+</head>
+<body>
+  <header class="placeholder">хедер</header>
+  <main class="frame">
+    <nav class="breadcrumbs" aria-label="Хлебные крошки">
+      <span>Главная страница</span>
+      <span aria-hidden="true">/</span>
+      <span aria-current="page">Восстановление пароля</span>
+    </nav>
+    <section class="recovery" aria-labelledby="recovery-title">
+      <h1 id="recovery-title">Восстановление пароля</h1>
+      <form class="stack" id="recovery-form">
+        <label class="field">Укажите электронную почту, с которой вы зарегистрировались
+          <input type="email" name="email" autocomplete="email" placeholder="name@example.com"
+                 aria-describedby="recovery-hint" required>
+        </label>
+        <p id="recovery-hint">На эту почту придёт ссылка для смены пароля.</p>
+        <button class="button button--primary" type="submit" disabled>Выслать</button>
+      </form>
+      <section class="panel stack" id="recovery-result" aria-labelledby="recovery-result-title" hidden>
+        <h2 id="recovery-result-title" tabindex="-1">Проверьте почту</h2>
+        <p>Если к этому адресу привязан аккаунт, на почту придёт ссылка для смены пароля.</p>
+      </section>
+      <p class="login-link"><span class="muted">Восстановили пароль?</span> <a href="Вход.html">Войти</a></p>
+    </section>
+  </main>
+  <footer class="placeholder">футер</footer>
+  <script>
+    const recoveryForm = document.querySelector('#recovery-form');
+    const result = document.querySelector('#recovery-result');
+
+    recoveryForm.addEventListener('submit', event => {
+      event.preventDefault();
+      recoveryForm.reset();
+      recoveryForm.hidden = true;
+      result.hidden = false;
+      result.querySelector('h2').focus();
+    });
+    recoveryForm.querySelector('button').disabled = false;
+  </script>
+</body>
+</html>

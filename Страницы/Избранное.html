@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Избранное — прототип «Весна»</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: #fff;
+      color: #181818;
+      font: 16px/1.45 Arial, sans-serif;
+    }
+
+    a { color: inherit; }
+    button { font: inherit; }
+    button, .button { cursor: pointer; }
+    :focus-visible { outline: 2px solid #181818; outline-offset: 3px; }
+    [hidden] { display: none !important; }
+
+    .frame {
+      width: min(1504px, calc(100% - 44px));
+      margin-inline: auto;
+    }
+
+    .preview {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      padding-block: 12px;
+      font-size: 14px;
+    }
+
+    .preview > span { margin-inline-end: 6px; }
+
+    .placeholder {
+      display: grid;
+      place-items: center;
+      min-height: 72px;
+      border: 1px solid #777;
+      background: #eee;
+    }
+
+    main { padding-block: 24px 64px; }
+
+    .breadcrumbs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 30px;
+      color: #424242;
+      font-size: 14px;
+    }
+
+    h1, h2, p { margin: 0; }
+    h1, h2 { line-height: 1.18; }
+    h1 { font-size: clamp(28px, 3.4vw, 42px); }
+    h2 { font-size: clamp(22px, 2.5vw, 32px); }
+
+    .empty {
+      display: grid;
+      justify-items: start;
+      gap: 18px;
+      width: min(100%, 536px);
+      margin: 64px auto 0;
+      padding: clamp(22px, 4vw, 56px);
+      border: 1px solid #777;
+      background: #f7f7f7;
+    }
+
+    .empty h1 { font-size: clamp(22px, 2.4vw, 30px); }
+    .empty p { color: #424242; }
+
+    .product-list {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 28px 20px;
+      margin: 24px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .product {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 12px;
+      border: 1px solid #888;
+    }
+
+    .product-image {
+      display: grid;
+      place-items: center;
+      width: min(100%, 300px);
+      aspect-ratio: 3 / 4;
+      margin: 0 auto 4px;
+      border: 1px solid #aaa;
+      background: #eee;
+      color: #424242;
+      font-size: 14px;
+      text-decoration: none;
+    }
+
+    .product-name { min-height: 2.9em; font-weight: 700; }
+    .product-price { margin-top: auto; font-size: 18px; }
+
+    .product-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 8px 14px;
+      border: 1px solid #222;
+      background: #fff;
+      color: #222;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .button--primary, .button[aria-pressed="true"] {
+      background: #222;
+      color: #fff;
+    }
+
+    .button--favorite {
+      min-width: 42px;
+      padding: 5px;
+      font-size: 23px;
+      line-height: 1;
+    }
+
+    .button:disabled {
+      border-color: #666;
+      background: #eee;
+      color: #333;
+      cursor: default;
+    }
+
+    .recent { margin-top: clamp(48px, 7vw, 108px); }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+
+    @media (max-width: 850px) {
+      .product-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 480px) {
+      .frame { width: calc(100% - 24px); }
+      .empty { margin-top: 36px; }
+      .product-list { gap: 14px 10px; }
+      .product { padding: 8px; }
+      .product-name { font-size: 14px; }
+      .product-actions .button--primary { padding-inline: 8px; font-size: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="preview frame" role="group" aria-label="Состояние прототипа">
+    <span>Состояние прототипа</span>
+    <button class="button" type="button" id="show-filled" aria-pressed="true">Заполнено</button>
+    <button class="button" type="button" id="show-empty" aria-pressed="false">Пусто</button>
+  </div>
+  <header class="placeholder">хедер</header>
+  <main class="frame">
+    <nav class="breadcrumbs" aria-label="Хлебные крошки">
+      <span>Главная страница</span>
+      <span aria-hidden="true">/</span>
+      <span aria-current="page">Избранное</span>
+    </nav>
+
+    <section id="filled" aria-labelledby="favorites-title">
+      <h1 id="favorites-title">Избранное</h1>
+      <ul class="product-list" id="favorites-list"></ul>
+    </section>
+    <section class="empty" id="empty" aria-labelledby="empty-title" hidden>
+      <h1 id="empty-title">Нет избранных товаров</h1>
+      <p>Добавляйте понравившиеся товары, чтобы вернуться к ним позже.</p>
+      <button class="button button--primary" type="button" disabled>В каталог <span aria-hidden="true">&nbsp; →</span></button>
+    </section>
+
+    <section class="recent" aria-labelledby="recent-title">
+      <h2 id="recent-title">Вы недавно смотрели</h2>
+      <ul class="product-list" id="recent-list"></ul>
+    </section>
+    <p class="visually-hidden" id="feedback" role="status"></p>
+  </main>
+  <footer class="placeholder">футер</footer>
+
+  <template id="product-card">
+    <li class="product">
+      <span class="product-image" aria-hidden="true">Фото товара</span>
+      <span class="product-name"></span>
+      <strong class="product-price"></strong>
+      <div class="product-actions">
+        <button class="button button--primary" type="button" data-action="cart">В корзину</button>
+        <button class="button button--favorite" type="button" data-action="favorite">
+          <span aria-hidden="true"></span>
+        </button>
+      </div>
+    </li>
+  </template>
+
+  <script>
+    const products = [
+      {
+        id: 'northern-lights',
+        name: 'Кукла шарнирная Мирэя. Северное сияние. Весна. 41 см.',
+        price: 4190,
+      },
+      {
+        id: 'geyser-valley',
+        name: 'Кукла шарнирная Мирэя. Долина гейзеров. Весна. 41 см.',
+        price: 4290,
+      },
+      {
+        id: 'crystal-sea',
+        name: 'Кукла шарнирная Мирэя. Кристальное море. Весна. 41 см.',
+        price: 4490,
+      },
+      {
+        id: 'board-game',
+        name: 'Развивающая настольная игра «Богатства Вятской земли»',
+        price: 1290,
+      },
+    ];
+    const sampleFavorites = products.slice(0, 3).map(product => product.id);
+    const favorites = new Set(sampleFavorites);
+    const cart = new Set();
+    const rubles = new Intl.NumberFormat('ru-RU', {
+      style: 'currency',
+      currency: 'RUB',
+      maximumFractionDigits: 0,
+    });
+    const template = document.querySelector('#product-card');
+    const filled = document.querySelector('#filled');
+    const empty = document.querySelector('#empty');
+    const favoritesList = document.querySelector('#favorites-list');
+    const recentList = document.querySelector('#recent-list');
+    const showFilled = document.querySelector('#show-filled');
+    const showEmpty = document.querySelector('#show-empty');
+    const feedback = document.querySelector('#feedback');
+
+    function renderCard(product) {
+      const card = template.content.cloneNode(true);
+      const name = card.querySelector('.product-name');
+      const isFavorite = favorites.has(product.id);
+      const inCart = cart.has(product.id);
+      const favoriteButton = card.querySelector('[data-action="favorite"]');
+      const cartButton = card.querySelector('[data-action="cart"]');
+
+      name.textContent = product.name;
+      card.querySelector('.product-price').textContent = rubles.format(product.price);
+      favoriteButton.setAttribute('aria-pressed', isFavorite);
+      favoriteButton.setAttribute('aria-label', (isFavorite ? 'Убрать из избранного: ' : 'Добавить в избранное: ') + product.name);
+      favoriteButton.firstElementChild.textContent = isFavorite ? '♥' : '♡';
+      cartButton.textContent = inCart ? 'В корзине' : 'В корзину';
+      cartButton.disabled = inCart;
+
+      favoriteButton.addEventListener('click', () => {
+        const focusList = favoriteButton.closest('.product-list');
+        if (favorites.has(product.id)) {
+          favorites.delete(product.id);
+          feedback.textContent = 'Товар убран из избранного.';
+        } else {
+          favorites.add(product.id);
+          feedback.textContent = 'Товар добавлен в избранное.';
+        }
+        render();
+        const matchingCard = [...focusList.children].find(item => item.dataset.product === product.id);
+        const nextButton = matchingCard?.querySelector('[data-action="favorite"]')
+          ?? focusList.querySelector('[data-action="favorite"]')
+          ?? showEmpty;
+        nextButton.focus();
+      });
+
+      cartButton.addEventListener('click', () => {
+        const focusList = cartButton.closest('.product-list');
+        cart.add(product.id);
+        feedback.textContent = 'Товар добавлен в корзину.';
+        render();
+        const matchingCard = [...focusList.children].find(item => item.dataset.product === product.id);
+        matchingCard?.querySelector('[data-action="favorite"]').focus();
+      });
+
+      card.firstElementChild.dataset.product = product.id;
+      return card;
+    }
+
+    function render() {
+      const hasFavorites = favorites.size > 0;
+      filled.hidden = !hasFavorites;
+      empty.hidden = hasFavorites;
+      showFilled.setAttribute('aria-pressed', hasFavorites);
+      showEmpty.setAttribute('aria-pressed', !hasFavorites);
+      favoritesList.replaceChildren(...products.filter(product => favorites.has(product.id)).map(renderCard));
+      recentList.replaceChildren(...products.map(renderCard));
+    }
+
+    showFilled.addEventListener('click', () => {
+      favorites.clear();
+      sampleFavorites.forEach(id => favorites.add(id));
+      render();
+    });
+    showEmpty.addEventListener('click', () => {
+      favorites.clear();
+      render();
+    });
+    render();
+  </script>
+</body>
+</html>

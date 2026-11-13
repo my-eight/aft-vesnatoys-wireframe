@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Подтверждение заказа — прототип «Весна»</title>
+  <link rel="stylesheet" href="личный-кабинет.css">
+  <style>
+    body {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      min-height: 100vh;
+    }
+
+    .confirmation {
+      max-width: 820px;
+      margin-inline: auto;
+      padding-block: clamp(36px, 8vw, 112px);
+      text-align: center;
+    }
+
+    .confirmation h1 { margin-bottom: 24px; }
+    .confirmation p + p { margin-top: 18px; }
+    .confirmation .actions { justify-content: center; margin-top: 36px; }
+  </style>
+</head>
+<body>
+  <header class="placeholder">хедер</header>
+  <main class="frame">
+    <nav class="breadcrumbs" aria-label="Хлебные крошки">
+      <span>Главная страница</span>
+      <span aria-hidden="true">/</span>
+      <span aria-current="page">Оформление заказа</span>
+    </nav>
+    <section class="confirmation" aria-labelledby="confirmation-title">
+      <h1 id="confirmation-title">Ваш заказ успешно создан</h1>
+      <p>Заказ №26 от <time datetime="2026-11-13T20:25:00+03:00">13.11.2026 в 20:25</time></p>
+      <p>Статус заказа можно отслеживать в <a href="Детали заказа.html?order=26">личном кабинете</a>.</p>
+      <div class="actions">
+        <button class="button button--primary" type="button" disabled>Продолжить покупки</button>
+        <button class="button" type="button" disabled>На главную</button>
+      </div>
+    </section>
+  </main>
+  <footer class="placeholder">футер</footer>
+</body>
+</html>

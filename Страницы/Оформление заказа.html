@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Оформление заказа — прототип «Весна»</title>
+  <link rel="stylesheet" href="личный-кабинет.css">
+  <style>
+    body { display: grid; grid-template-rows: auto 1fr auto; min-height: 100vh; }
+    .checkout-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 2.5fr) minmax(230px, 1fr);
+      align-items: start;
+      gap: 24px;
+    }
+    .step, .order-summary { border: 1px solid #888; background: #fff; }
+    .step-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 16px clamp(16px, 3vw, 42px);
+    }
+    .step-heading h2 { display: flex; align-items: center; gap: 12px; }
+    .step-number {
+      display: grid;
+      place-items: center;
+      flex: 0 0 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #e9e9e9;
+      font-size: 16px;
+    }
+    .step.active .step-number { background: #222; color: #fff; }
+    .step-content, .step-summary { padding: 20px clamp(16px, 3vw, 42px); border-top: 1px solid #aaa; }
+    .step-content:not(.stack) > .actions { margin-top: 20px; }
+    .items-reviewed > .actions { display: none; }
+    .step-body { max-width: 640px; }
+    .order-summary { position: sticky; top: 16px; }
+    .order-summary h2 { padding: 20px; }
+    .order-summary dl > div { display: flex; justify-content: space-between; gap: 14px; padding: 6px 20px; }
+    .order-summary dd { text-align: right; font-weight: 700; }
+    .order-summary .order-total { border-top: 1px solid #aaa; margin-top: 12px; padding-block: 16px; font-size: 22px; }
+    .order-total dt { color: inherit; font-weight: 700; }
+    .order-item { grid-template-columns: 52px minmax(0, 1fr) auto auto; }
+    .order-item small { display: block; }
+    .choice-group { min-width: 0; margin: 0; padding: 0; border: 0; }
+    .choice-group legend { margin-bottom: 10px; font-weight: 700; }
+    .choice { display: flex; align-items: start; gap: 8px; cursor: pointer; }
+    .choice input { flex: 0 0 auto; margin-top: 4px; accent-color: #222; }
+    .choices { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 140px), 1fr)); gap: 10px; }
+    .choice-card { border: 1px solid #888; padding: 12px; min-height: 76px; }
+    .choice-card small { display: block; margin-top: 3px; }
+    .choice-card:has(:checked) { box-shadow: inset 0 0 0 1px #222; background: #eee; }
+    .step-summary { color: #424242; }
+    .submit-area { padding-block: 4px; }
+    .submit-area .button { min-width: min(100%, 220px); }
+
+    @media (max-width: 760px) {
+      .checkout-layout { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+      .order-summary { position: static; grid-row: 1; }
+      .step-heading h2 { font-size: 19px; }
+      .order-item { grid-template-columns: 46px minmax(0, 1fr) auto; gap: 6px 10px; }
+      .order-item > :nth-child(3) { grid-column: 2; }
+      .order-item > :last-child { grid-column: 3; grid-row: 1 / span 2; }
+      .order-item .product-photo { grid-row: 1 / span 2; }
+    }
+  </style>
+  <script src="товары-заказа.js" defer></script>
+  <script src="оформление-заказа.js" defer></script>
+</head>
+<body>
+  <header class="placeholder">хедер</header>
+  <main class="frame">
+    <nav class="breadcrumbs" aria-label="Хлебные крошки">
+      <span>Главная страница</span><span aria-hidden="true">/</span>
+      <a id="cart-crumb" href="Корзина.html">Корзина</a><span aria-hidden="true">/</span>
+      <span aria-current="page">Оформление заказа</span>
+    </nav>
+    <h1>Оформление заказа</h1>
+    <section class="panel stack empty" id="empty-order" hidden>
+      <h2>Корзина пуста</h2>
+      <a class="button" id="empty-cart-link" href="Корзина.html">Вернуться в корзину</a>
+    </section>
+    <div class="checkout-layout" id="checkout-layout">
+      <form class="stack" id="order-form" novalidate>
+        <section class="step" aria-labelledby="items-title">
+          <div class="step-heading">
+            <h2 id="items-title" tabindex="-1"><span class="step-number" aria-hidden="true">1</span>Товары в заказе</h2>
+            <a class="button" id="edit-cart" href="Корзина.html">Изменить</a>
+          </div>
+          <div class="step-content">
+            <ul class="products" id="order-items"></ul>
+            <div class="actions"><button class="button button--primary" type="button" data-next>Далее</button></div>
+          </div>
+        </section>
+
+        <section class="step" aria-labelledby="region-title">
+          <div class="step-heading">
+            <h2 id="region-title" tabindex="-1"><span class="step-number" aria-hidden="true">2</span>Регион доставки</h2>
+            <button class="button" type="button" data-edit aria-label="Изменить регион доставки" hidden>Изменить</button>
+          </div>
+          <div class="step-content" hidden>
+            <div class="step-body stack">
+              <fieldset class="choice-group stack">
+                <legend>Тип плательщика</legend>
+                <label class="choice"><input type="radio" name="payer" value="individual" checked>Физическое лицо</label>
+                <label class="choice"><input type="radio" name="payer" value="company">Юридическое лицо</label>
+              </fieldset>
+              <label class="field">Местоположение *
+                <select id="location" name="location" required>
+                  <option value="">Выберите местоположение</option>
+                  <option value="Киров">Киров, Кировская область</option>
+                  <option value="Москва">Москва</option>
+                  <option value="other">Другое местоположение</option>
+                </select>
+              </label>
+              <label class="field" id="city-field" hidden>Город *
+                <input id="city" name="city" autocomplete="address-level2" required disabled>
+              </label>
+              <label class="field">Почтовый индекс *
+                <input id="postal-code" name="postal-code" inputmode="numeric" autocomplete="postal-code"
+                       pattern="[0-9]{6}" maxlength="6" title="Шесть цифр" required>
+              </label>
+            </div>
+            <div class="actions spread">
+              <button class="button" type="button" data-back>Назад</button>
+              <button class="button button--primary" type="button" data-next>Далее</button>
+            </div>
+          </div>
+          <p class="step-summary" hidden></p>
+        </section>
+
+        <section class="step" aria-labelledby="delivery-title">
+          <div class="step-heading">
+            <h2 id="delivery-title" tabindex="-1"><span class="step-number" aria-hidden="true">3</span>Доставка</h2>
+            <button class="button" type="button" data-edit aria-label="Изменить доставку" hidden>Изменить</button>
+          </div>
+          <div class="step-content stack" hidden>
+            <fieldset class="choice-group">
+              <legend>Выберите один способ получения</legend>
+              <div class="choices">
+                <label class="choice choice-card"><input type="radio" name="delivery" value="self" required><span>Самовывоз<small>Со склада фабрики</small></span></label>
+                <label class="choice choice-card"><input type="radio" name="delivery" value="cdek"><span>СДЭК<small>Пункт выдачи</small></span></label>
+                <label class="choice choice-card"><input type="radio" name="delivery" value="yandex"><span>Яндекс Доставка<small>Курьер</small></span></label>
+                <label class="choice choice-card"><input type="radio" name="delivery" value="5post"><span>5Post<small>Пункт выдачи</small></span></label>
+                <label class="choice choice-card"><input type="radio" name="delivery" value="post"><span>Почта России<small>В почтовое отделение</small></span></label>
+              </div>
+            </fieldset>
+            <div class="block" id="delivery-info" hidden>
+              <h3 id="delivery-name"></h3>
+              <p id="delivery-description"></p>
+              <p id="delivery-rate"></p>
+            </div>
+            <label class="field" id="pickup-field" hidden><span id="pickup-label"></span>
+              <select id="pickup-point" name="pickup-point" required disabled></select>
+            </label>
+            <div class="actions spread">
+              <button class="button" type="button" data-back>Назад</button>
+              <button class="button button--primary" type="button" data-next>Далее</button>
+            </div>
+          </div>
+          <p class="step-summary" hidden></p>
+        </section>
+
+        <section class="step" aria-labelledby="payment-title">
+          <div class="step-heading">
+            <h2 id="payment-title" tabindex="-1"><span class="step-number" aria-hidden="true">4</span>Оплата</h2>
+            <button class="button" type="button" data-edit aria-label="Изменить оплату" hidden>Изменить</button>
+          </div>
+          <div class="step-content stack" hidden>
+            <fieldset class="choice-group">
+              <legend>Способ оплаты</legend>
+              <div class="choices">
+                <label class="choice choice-card" id="card-option"><input type="radio" name="payment" value="card" checked required>Банковской картой онлайн</label>
+                <label class="choice choice-card" id="invoice-option" hidden><input type="radio" name="payment" value="invoice" required disabled>По счёту</label>
+              </div>
+            </fieldset>
+            <p class="block" id="payment-info"></p>
+            <div class="actions spread">
+              <button class="button" type="button" data-back>Назад</button>
+              <button class="button button--primary" type="button" data-next>Далее</button>
+            </div>
+          </div>
+          <p class="step-summary" hidden></p>
+        </section>
+
+        <section class="step" aria-labelledby="buyer-title">
+          <div class="step-heading">
+            <h2 id="buyer-title" tabindex="-1"><span class="step-number" aria-hidden="true">5</span>Покупатель</h2>
+            <button class="button" type="button" data-edit aria-label="Изменить данные покупателя" hidden>Изменить</button>
+          </div>
+          <div class="step-content" hidden>
+            <div class="step-body stack">
+              <label class="field">ФИО получателя *
+                <input id="recipient" name="recipient" value="Анна Иванова" autocomplete="name" required>
+              </label>
+              <label class="field">Электронная почта *
+                <input name="email" type="email" value="anna@example.com" autocomplete="email" required>
+              </label>
+              <label class="field">Телефон *
+                <input name="phone" type="tel" value="+7 (900) 000-00-00" autocomplete="tel" required>
+              </label>
+              <fieldset class="choice-group stack" id="company-fields" disabled hidden>
+                <legend>Реквизиты организации</legend>
+                <label class="field">Название организации *
+                  <input name="company" autocomplete="organization" required>
+                </label>
+                <label class="field">ИНН *
+                  <input name="inn" inputmode="numeric" pattern="[0-9]{10}" maxlength="10" title="10 цифр" required>
+                </label>
+              </fieldset>
+              <fieldset class="choice-group stack" id="address-fields" disabled hidden>
+                <legend>Адрес доставки</legend>
+                <label class="field">Улица * <input name="street" required></label>
+                <label class="field">Дом / корпус / строение * <input name="house" required></label>
+                <label class="field">Квартира / офис <input name="unit"></label>
+              </fieldset>
+              <label class="field">Комментарий к заказу <textarea name="comment" rows="3"></textarea></label>
+            </div>
+            <div class="actions"><button class="button" type="button" data-back>Назад</button></div>
+          </div>
+          <p class="step-summary" hidden></p>
+        </section>
+
+        <div class="submit-area actions">
+          <button class="button button--primary" type="submit" disabled>Оформить заказ</button>
+          <label class="choice"><input name="consent" type="checkbox" required>Согласен с правилами обработки персональных данных</label>
+        </div>
+      </form>
+
+      <aside class="order-summary" aria-labelledby="summary-title">
+        <h2 id="summary-title">Ваш заказ</h2>
+        <dl aria-live="polite">
+          <div><dt>Товары</dt><dd id="subtotal"></dd></div>
+          <div><dt>Доставка</dt><dd id="delivery-total">Не выбрана</dd></div>
+          <div class="order-total"><dt>Итого</dt><dd id="total"></dd></div>
+        </dl>
+      </aside>
+    </div>
+  </main>
+  <footer class="placeholder">футер</footer>
+
+  <template id="order-row">
+    <li class="product order-item">
+      <span class="product-photo" aria-hidden="true">Фото</span>
+      <div><strong data-field="name"></strong><small data-field="sku"></small></div>
+      <span data-field="quantity"></span>
+      <strong data-field="price"></strong>
+    </li>
+  </template>
+</body>
+</html>

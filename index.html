@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Прототипы интернет-магазина «Весна»</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --text: #243a32;
+      --muted: #52635a;
+      --green: #319e69;
+      --dark-green: #26774c;
+      --border: #e0ebe4;
+      font: 16px/1.45 Onest, Arial, sans-serif;
+      color: var(--text);
+      background: #f8faf8;
+    }
+
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    body { margin: 0; }
+    a { color: inherit; }
+    a:focus-visible { outline: 3px solid var(--dark-green); outline-offset: 3px; }
+
+    .container {
+      width: min(1120px, calc(100% - 48px));
+      margin-inline: auto;
+    }
+
+    .site-header {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px 28px;
+      padding-block: 18px;
+    }
+
+    .brand { display: block; width: 143px; height: auto; }
+
+    .navigation {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 10px;
+    }
+
+    .navigation a {
+      padding: 6px 9px;
+      border-radius: 8px;
+      font-size: .88rem;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .navigation a:hover { background: #eaf5f0; color: var(--dark-green); }
+
+    main { padding-block: 32px 56px; }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 220px;
+      align-items: center;
+      gap: 24px;
+      padding: 28px 52px;
+      border: 1px solid #daeee2;
+      border-radius: 32px;
+      background: linear-gradient(110deg, #eff9f3 20%, #dff3e8 100%);
+      overflow: hidden;
+    }
+
+    .hero h1 {
+      max-width: 700px;
+      margin: 0 0 14px;
+      font-size: clamp(2rem, 5.5vw, 4rem);
+      line-height: 1.02;
+      letter-spacing: -.055em;
+      text-wrap: balance;
+    }
+
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .hero-art {
+      position: relative;
+      isolation: isolate;
+      display: grid;
+      place-items: center;
+      min-height: 174px;
+    }
+
+    .hero-art::before,
+    .hero-art::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      border-radius: 50%;
+    }
+
+    .hero-art::before { width: 170px; height: 170px; background: #eadbf8; }
+    .hero-art::after { width: 60px; height: 60px; right: 2px; bottom: 0; background: #f9cad7; }
+    .hero-art img { display: block; height: 184px; width: auto; object-fit: contain; }
+
+    .sections {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px;
+      margin-top: 24px;
+    }
+
+    .section {
+      --tint: #eaf5f0;
+      --accent: #26774c;
+      padding: 20px;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      background: #fff;
+      scroll-margin-top: 16px;
+    }
+
+    #forms { --tint: #f3eafb; --accent: #6d4394; }
+    #account { --tint: #fff0f4; --accent: #8e3853; }
+    #updated-blocks { --tint: #fff6db; --accent: #795610; }
+
+    .section h2 {
+      margin: 0 0 8px;
+      padding: 12px 15px;
+      border-radius: 12px;
+      color: var(--accent);
+      background: var(--tint);
+      font-size: 1.27rem;
+      line-height: 1.2;
+      letter-spacing: -.025em;
+    }
+
+    .section ul { margin: 0; padding: 0; list-style: none; }
+    .section li + li { border-top: 1px solid #eef2ef; }
+
+    .prototype-link {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      min-height: 46px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      text-decoration: none;
+    }
+
+    .prototype-link:hover { background: var(--tint); }
+    .prototype-link:focus-visible { outline-offset: -2px; }
+    .prototype-title, .prototype-context { display: block; }
+    .prototype-title { font-weight: 700; }
+    .prototype-context { color: var(--muted); font-size: .82rem; }
+    .new-tab-icon { flex: 0 0 auto; color: var(--accent); font-size: 1.2rem; }
+
+    @media (max-width: 740px) {
+      .container { width: calc(100% - 32px); }
+      .header-inner { flex-wrap: wrap; }
+      .hero { grid-template-columns: minmax(0, 1fr) auto; padding: 24px; }
+      .hero-art { min-height: 110px; }
+      .hero-art::before { width: 92px; height: 92px; }
+      .hero-art::after { width: 32px; height: 32px; right: -8px; }
+      .hero-art img { height: 112px; }
+      .sections { grid-template-columns: 1fr; gap: 14px; }
+    }
+
+    @media (max-width: 420px) {
+      .navigation { gap: 2px; }
+      .navigation a { padding-inline: 6px; }
+      .hero { grid-template-columns: 1fr; }
+      .hero-art { display: none; }
+      .section { padding: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <img class="brand" src="assets/логотип.png" alt="Фабрика игрушек «Весна»" width="225" height="56">
+      <nav class="navigation" aria-label="Разделы индекса">
+        <a href="#pages">Страницы магазина</a>
+        <a href="#account">Личный кабинет</a>
+        <a href="#forms">Доступ к аккаунту</a>
+        <a href="#updated-blocks" hidden>Блоки действующего сайта</a>
+      </nav>
+    </div>
+  </header>
+  <main class="container">
+    <div class="hero">
+      <div>
+        <h1>Прототипы интернет-магазина</h1>
+        <p>Выберите экран или форму. Прототип откроется в новой вкладке.</p>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <img src="assets/кукла.png" alt="" width="213" height="320">
+      </div>
+    </div>
+    <div class="sections">
+      <section class="section" id="pages" aria-labelledby="pages-title">
+        <h2 id="pages-title">Страницы магазина</h2>
+        <ul>
+            <li>
+              <a class="prototype-link" href="%D0%A1%D1%82%D1%80%D0%B0%D0%BD%D0%B8%D1%86%D1%8B/%D0%9A%D0%BE%D1%80%D0%B7%D0%B8%D0%BD%D0%B0.html" target="_blank" rel="noopener">
+                <span>
+                  <span class="prototype-title">Корзина</span>
+                </span>
+                <span class="new-tab-icon" aria-hidden="true">↗</span>
+              </a>
+            </li>
+            <li>
+              <a class="prototype-link" href="%D0%A1%D1%82%D1%80%D0%B0%D0%BD%D0%B8%D1%86%D1%8B/%D0%9E%D1%84%D0%BE%D1%80%D0%BC%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%B7%D0%B0%D0%BA%D0%B0%D0%B7%D0%B0.html" target="_blank" rel="noopener">
+                <span>
+                  <span class="prototype-title">Оформление заказа</span>
+                </span>
+                <span class="new-tab-icon" aria-hidden="true">↗</span>
+              </a>
+            </li>
+            <li>
+              <a class="prototype-link" href="%D0%A1%D1%82%D1%80%D0%B0%D0%BD%D0%B8%D1%86%D1%8B/%D0%9F%D0%BE%D0%B4%D1%82%D0%B2%D0%B5%D1%80%D0%B6%D0%B4%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%B7%D0%B0%D0%BA%D0%B0%D0%B7%D0%B0.html" target="_blank" rel="noopener">
+                <span>
+                  <span class="prototype-title">Подтверждение заказа</span>
+                </span>
+                <span class="new-tab-icon" aria-hidden="true">↗</span>
+              </a>
+            </li>
+            <li>
+              <a class="prototype-link" href="%D0%A1%D1%82%D1%80%D0%B0%D0%BD%D0%B8%D1%86%D1%8B/%D0%98%D0%B7%D0%B1%D1%80%D0%B0%D0%BD%D0%BD%D0%BE%D0%B5.html" target="_blank" rel="noopener">
+                <span>
+                  <span class="prototype-title">Избранное</span>
+                </span>
+                <span class="new-tab-icon" aria-hidden="true">↗</span>
+              </a>
+            </li>
+        </ul>
+      </section>
+      <section class="section" id="account" aria-labelledby="account-title">
+        <h2 id="account-title">Личный кабинет</h2>
+        <ul>
+          <li><a class="prototype-link" href="Страницы/Личные данные.html" target="_blank" rel="noopener"><span class="prototype-title">Личные данные</span><span class="new-tab-icon" aria-hidden="true">↗</span></a></li>
+          <li><a class="prototype-link" href="Страницы/Текущие заказы.html" target="_blank" rel="noopener"><span class="prototype-title">Текущие заказы</span><span class="new-tab-icon" aria-hidden="true">↗</span></a></li>
+          <li><a class="prototype-link" href="Страницы/История заказов.html" target="_blank" rel="noopener"><span class="prototype-title">История заказов</span><span class="new-tab-icon" aria-hidden="true">↗</span></a></li>
+          <li><a class="prototype-link" href="Страницы/Детали заказа.html" target="_blank" rel="noopener"><span class="prototype-title">Детали заказа</span><span class="new-tab-icon" aria-hidden="true">↗</span></a></li>
+        </ul>
+      </section>
+      <section class="section" id="forms" aria-labelledby="forms-title">
+        <h2 id="forms-title">Доступ к аккаунту</h2>
+        <ul>
+            <li>
+              <a class="prototype-link" href="%D0%A4%D0%BE%D1%80%D0%BC%D1%8B/%D0%92%D1%85%D0%BE%D0%B4.html" target="_blank" rel="noopener">
+                <span>
+                  <span class="prototype-title">Вход</span>
+                </span>
+                <span class="new-tab-icon" aria-hidden="true">↗</span>
+              </a>
+            </li>
+            <li>
+              <a class="prototype-link" href="%D0%A4%D0%BE%D1%80%D0%BC%D1%8B/%D0%A0%D0%B5%D0%B3%D0%B8%D1%81%D1%82%D1%80%D0%B0%D1%86%D0%B8%D1%8F.html" target="_blank" rel="noopener">
+                <span>
+                  <span class="prototype-title">Регистрация</span>
+                </span>
+                <span class="new-tab-icon" aria-hidden="true">↗</span>
+              </a>
+            </li>
+            <li>
+              <a class="prototype-link" href="%D0%A4%D0%BE%D1%80%D0%BC%D1%8B/%D0%92%D0%BE%D1%81%D1%81%D1%82%D0%B0%D0%BD%D0%BE%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%B4%D0%BE%D1%81%D1%82%D1%83%D0%BF%D0%B0.html" target="_blank" rel="noopener">
+                <span>
+                  <span class="prototype-title">Восстановление доступа</span>
+                </span>
+                <span class="new-tab-icon" aria-hidden="true">↗</span>
+              </a>
+            </li>
+            <li hidden>
+              <a class="prototype-link" href="%D0%A4%D0%BE%D1%80%D0%BC%D1%8B/%D0%9E%D0%B1%D1%80%D0%B0%D1%89%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%BF%D0%BE%20%D0%B7%D0%B0%D0%BA%D0%B0%D0%B7%D1%83.html" target="_blank" rel="noopener">
+                <span>
+                  <span class="prototype-title">Обращение по заказу</span>
+                <span class="prototype-context">Изменение, отмена или возврат</span>
+                </span>
+                <span class="new-tab-icon" aria-hidden="true">↗</span>
+              </a>
+            </li>
+            <li hidden>
+              <a class="prototype-link" href="%D0%A4%D0%BE%D1%80%D0%BC%D1%8B/%D0%A0%D0%B5%D0%B4%D0%B0%D0%BA%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%20%D0%BF%D1%80%D0%BE%D1%84%D0%B8%D0%BB%D1%8F.html" target="_blank" rel="noopener">
+                <span>
+                  <span class="prototype-title">Редактирование профиля</span>
+                </span>
+                <span class="new-tab-icon" aria-hidden="true">↗</span>
+              </a>
+            </li>
+            <li hidden>
+              <a class="prototype-link" href="%D0%A4%D0%BE%D1%80%D0%BC%D1%8B/%D0%94%D0%BE%D0%B1%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%B8%20%D1%80%D0%B5%D0%B4%D0%B0%D0%BA%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%20%D0%B0%D0%B4%D1%80%D0%B5%D1%81%D0%B0.html" target="_blank" rel="noopener">
+                <span>
+                  <span class="prototype-title">Добавление и редактирование адреса</span>
+                </span>
+                <span class="new-tab-icon" aria-hidden="true">↗</span>
+              </a>
+            </li>
+            <li hidden>
+              <a class="prototype-link" href="%D0%A4%D0%BE%D1%80%D0%BC%D1%8B/%D0%A0%D0%B5%D0%B4%D0%B0%D0%BA%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%20%D1%80%D0%B5%D0%BA%D0%B2%D0%B8%D0%B7%D0%B8%D1%82%D0%BE%D0%B2.html" target="_blank" rel="noopener">
+                <span>
+                  <span class="prototype-title">Редактирование реквизитов</span>
+                </span>
+                <span class="new-tab-icon" aria-hidden="true">↗</span>
+              </a>
+            </li>
+        </ul>
+      </section>
+      <section class="section" id="updated-blocks" aria-labelledby="updated-blocks-title" hidden>
+        <h2 id="updated-blocks-title">Блоки действующего сайта</h2>
+        <ul>
+            <li>
+              <a class="prototype-link" href="%D0%9E%D0%B1%D0%BD%D0%BE%D0%B2%D0%BB%D1%8F%D0%B5%D0%BC%D1%8B%D0%B5%20%D0%B1%D0%BB%D0%BE%D0%BA%D0%B8/%D0%A5%D0%B5%D0%B4%D0%B5%D1%80.html" target="_blank" rel="noopener">
+                <span>
+                  <span class="prototype-title">Хедер</span>
+                <span class="prototype-context">Корзина, избранное и кабинет покупателя</span>
+                </span>
+                <span class="new-tab-icon" aria-hidden="true">↗</span>
+              </a>
+            </li>
+            <li>
+              <a class="prototype-link" href="%D0%9E%D0%B1%D0%BD%D0%BE%D0%B2%D0%BB%D1%8F%D0%B5%D0%BC%D1%8B%D0%B5%20%D0%B1%D0%BB%D0%BE%D0%BA%D0%B8/%D0%9C%D0%BE%D0%B1%D0%B8%D0%BB%D1%8C%D0%BD%D0%B0%D1%8F%20%D0%BD%D0%B0%D0%B2%D0%B8%D0%B3%D0%B0%D1%86%D0%B8%D1%8F.html" target="_blank" rel="noopener">
+                <span>
+                  <span class="prototype-title">Мобильная навигация</span>
+                <span class="prototype-context">Корзина, избранное и кабинет покупателя</span>
+                </span>
+                <span class="new-tab-icon" aria-hidden="true">↗</span>
+              </a>
+            </li>
+            <li>
+              <a class="prototype-link" href="%D0%9E%D0%B1%D0%BD%D0%BE%D0%B2%D0%BB%D1%8F%D0%B5%D0%BC%D1%8B%D0%B5%20%D0%B1%D0%BB%D0%BE%D0%BA%D0%B8/%D0%A4%D1%83%D1%82%D0%B5%D1%80.html" target="_blank" rel="noopener">
+                <span>
+                  <span class="prototype-title">Футер</span>
+                <span class="prototype-context">Отдельный прототип</span>
+                </span>
+                <span class="new-tab-icon" aria-hidden="true">↗</span>
+              </a>
+            </li>
+            <li>
+              <a class="prototype-link" href="%D0%9E%D0%B1%D0%BD%D0%BE%D0%B2%D0%BB%D1%8F%D0%B5%D0%BC%D1%8B%D0%B5%20%D0%B1%D0%BB%D0%BE%D0%BA%D0%B8/%D0%A2%D0%BE%D0%B2%D0%B0%D1%80%D0%BD%D0%B0%D1%8F%20%D0%BA%D0%B0%D1%80%D1%82%D0%BE%D1%87%D0%BA%D0%B0%20%D0%B2%20%D0%B2%D1%8B%D0%B4%D0%B0%D1%87%D0%B5.html" target="_blank" rel="noopener">
+                <span>
+                  <span class="prototype-title">Товарная карточка в выдаче</span>
+                <span class="prototype-context">Каталог, поиск и подборки</span>
+                </span>
+                <span class="new-tab-icon" aria-hidden="true">↗</span>
+              </a>
+            </li>
+            <li>
+              <a class="prototype-link" href="%D0%9E%D0%B1%D0%BD%D0%BE%D0%B2%D0%BB%D1%8F%D0%B5%D0%BC%D1%8B%D0%B5%20%D0%B1%D0%BB%D0%BE%D0%BA%D0%B8/%D0%A4%D0%B8%D0%BB%D1%8C%D1%82%D1%80%D1%8B%20%D0%BA%D0%B0%D1%82%D0%B0%D0%BB%D0%BE%D0%B3%D0%B0.html" target="_blank" rel="noopener">
+                <span>
+                  <span class="prototype-title">Фильтры каталога</span>
+                <span class="prototype-context">Свойства товаров из 1С</span>
+                </span>
+                <span class="new-tab-icon" aria-hidden="true">↗</span>
+              </a>
+            </li>
+            <li>
+              <a class="prototype-link" href="%D0%9E%D0%B1%D0%BD%D0%BE%D0%B2%D0%BB%D1%8F%D0%B5%D0%BC%D1%8B%D0%B5%20%D0%B1%D0%BB%D0%BE%D0%BA%D0%B8/%D0%91%D0%BB%D0%BE%D0%BA%20%D0%BF%D0%BE%D0%BA%D1%83%D0%BF%D0%BA%D0%B8%20%D0%B2%20%D0%BA%D0%B0%D1%80%D1%82%D0%BE%D1%87%D0%BA%D0%B5%20%D1%82%D0%BE%D0%B2%D0%B0%D1%80%D0%B0.html" target="_blank" rel="noopener">
+                <span>
+                  <span class="prototype-title">Блок покупки в карточке товара</span>
+                <span class="prototype-context">Цена, наличие, вариант и количество</span>
+                </span>
+                <span class="new-tab-icon" aria-hidden="true">↗</span>
+              </a>
+            </li>
+            <li>
+              <a class="prototype-link" href="%D0%9E%D0%B1%D0%BD%D0%BE%D0%B2%D0%BB%D1%8F%D0%B5%D0%BC%D1%8B%D0%B5%20%D0%B1%D0%BB%D0%BE%D0%BA%D0%B8/%D0%A5%D0%B0%D1%80%D0%B0%D0%BA%D1%82%D0%B5%D1%80%D0%B8%D1%81%D1%82%D0%B8%D0%BA%D0%B8%20%D0%B2%20%D0%BA%D0%B0%D1%80%D1%82%D0%BE%D1%87%D0%BA%D0%B5%20%D1%82%D0%BE%D0%B2%D0%B0%D1%80%D0%B0.html" target="_blank" rel="noopener">
+                <span>
+                  <span class="prototype-title">Характеристики в карточке товара</span>
+                <span class="prototype-context">Заполненные свойства из 1С</span>
+                </span>
+                <span class="new-tab-icon" aria-hidden="true">↗</span>
+              </a>
+            </li>
+        </ul>
+      </section>
+    </div>
+  </main>
+</body>
+</html>
