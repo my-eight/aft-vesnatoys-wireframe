@@ -56,6 +56,65 @@
     .step-summary { color: #424242; }
     .submit-area { padding-block: 4px; }
     .submit-area .button { min-width: min(100%, 220px); }
+    .pickup-widget { border: 1px solid #888; }
+    .pickup-widget-heading { padding: 14px 16px; border-bottom: 1px solid #aaa; }
+    .pickup-widget-heading p { margin-top: 5px; font-size: 14px; color: #525252; }
+    .pickup-map {
+      position: relative;
+      height: 390px;
+      overflow: hidden;
+      isolation: isolate;
+      background: repeating-linear-gradient(0deg, transparent 0 66px, #fff 66px 78px),
+                  repeating-linear-gradient(90deg, #e5e5e5 0 96px, #fff 96px 108px);
+    }
+    .pickup-map::before {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      width: 115%;
+      height: 28px;
+      top: 30%;
+      left: -5%;
+      transform: rotate(-21deg);
+      background: #fafafa;
+      border-block: 1px solid #bbb;
+    }
+    .pickup-map-city { position: absolute; left: 16px; top: 12px; padding: 3px 8px; background: #fff; font-weight: 700; }
+    .pickup-marker {
+      position: absolute;
+      left: var(--x);
+      top: var(--y);
+      transform: translate(-50%, -50%);
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      padding: 0;
+      border: 2px solid #222;
+      border-radius: 50% 50% 50% 0;
+      rotate: -45deg;
+      background: #fff;
+      color: #222;
+      box-shadow: 0 2px 4px #0002;
+    }
+    .pickup-marker span { rotate: 45deg; font-weight: 700; }
+    .pickup-marker:hover, .pickup-marker[aria-expanded="true"] { background: #222; color: #fff; }
+    .pickup-marker[aria-pressed="true"] { outline: 3px double #222; outline-offset: 4px; }
+    .pickup-popup {
+      position: absolute;
+      left: 12px;
+      bottom: 12px;
+      width: min(350px, calc(100% - 24px));
+      padding: 16px;
+      border: 1px solid #222;
+      background: #fff;
+      box-shadow: 3px 3px 0 #0002;
+    }
+    .pickup-popup h4 { margin: 0 30px 8px 0; }
+    .pickup-popup p { font-size: 14px; }
+    .pickup-popup .button { margin-top: 12px; min-height: 38px; }
+    .pickup-popup-close { position: absolute; top: 8px; right: 8px; width: 30px; height: 30px; border: 1px solid #888; background: #fff; }
+    .pickup-selection { padding: 12px 16px; border-top: 1px solid #aaa; font-size: 14px; }
 
     @media (max-width: 760px) {
       .checkout-layout { grid-template-columns: minmax(0, 1fr); gap: 16px; }
@@ -143,7 +202,7 @@
               <div class="choices">
                 <label class="choice choice-card"><input type="radio" name="delivery" value="self" required><span>Самовывоз<small>Со склада фабрики</small></span></label>
                 <label class="choice choice-card"><input type="radio" name="delivery" value="cdek"><span>СДЭК<small>Пункт выдачи</small></span></label>
-                <label class="choice choice-card"><input type="radio" name="delivery" value="yandex"><span>Яндекс Доставка<small>Курьер</small></span></label>
+                <label class="choice choice-card"><input type="radio" name="delivery" value="yandex"><span>Яндекс Доставка<small>Пункт выдачи</small></span></label>
                 <label class="choice choice-card"><input type="radio" name="delivery" value="5post"><span>5Post<small>Пункт выдачи</small></span></label>
                 <label class="choice choice-card"><input type="radio" name="delivery" value="post"><span>Почта России<small>В почтовое отделение</small></span></label>
               </div>
@@ -153,6 +212,24 @@
               <p id="delivery-description"></p>
               <p id="delivery-rate"></p>
             </div>
+            <section class="pickup-widget" id="pickup-widget" aria-labelledby="pickup-widget-title" hidden>
+              <div class="pickup-widget-heading">
+                <h3 id="pickup-widget-title"></h3>
+                <p id="pickup-widget-note"></p>
+              </div>
+              <div class="pickup-map" role="group" aria-label="Карта пунктов получения заказа">
+                <span class="pickup-map-city" id="pickup-map-city"></span>
+                <div id="pickup-markers"></div>
+                <div class="pickup-popup" id="pickup-popup" role="region" aria-labelledby="pickup-point-name" hidden>
+                  <button class="pickup-popup-close" id="close-pickup-popup" type="button" aria-label="Закрыть информацию о пункте">×</button>
+                  <h4 id="pickup-point-name"></h4>
+                  <p id="pickup-point-address"></p>
+                  <p id="pickup-point-hours"></p>
+                  <button class="button button--primary" id="choose-pickup-point" type="button">Выбрать этот пункт</button>
+                </div>
+              </div>
+              <p class="pickup-selection" id="pickup-selection" role="status" aria-live="polite"></p>
+            </section>
             <label class="field" id="pickup-field" hidden><span id="pickup-label"></span>
               <select id="pickup-point" name="pickup-point" required disabled></select>
             </label>
