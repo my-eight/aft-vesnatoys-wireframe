@@ -107,7 +107,16 @@
 
     #forms { --tint: #f3eafb; --accent: #6d4394; }
     #account { --tint: #fff0f4; --accent: #8e3853; }
-    #updated-blocks { --tint: #fff6db; --accent: #795610; }
+    #updated-blocks {
+      --tint: #fff6db;
+      --accent: #795610;
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+      align-items: center;
+      gap: 20px;
+    }
+    #updated-blocks h2 { margin: 0; }
 
     .section h2 {
       margin: 0 0 8px;
@@ -151,6 +160,7 @@
       .hero-art::after { width: 32px; height: 32px; right: -8px; }
       .hero-art img { height: 112px; }
       .sections { grid-template-columns: 1fr; gap: 14px; }
+      #updated-blocks { grid-template-columns: 1fr; gap: 8px; }
     }
 
     @media (max-width: 420px) {
@@ -281,10 +291,16 @@
             </li>
         </ul>
       </section>
-      <section class="section" id="updated-blocks" aria-labelledby="updated-blocks-title" hidden>
-        <h2 id="updated-blocks-title">Блоки действующего сайта</h2>
+      <section class="section" id="updated-blocks" aria-labelledby="updated-blocks-title">
+        <h2 id="updated-blocks-title">Блоки сайта</h2>
         <ul>
             <li>
+              <a class="prototype-link" href="Обновляемые блоки/Вопросы и ответы.html" target="_blank" rel="noopener">
+                <span class="prototype-title">Вопросы и ответы</span>
+                <span class="new-tab-icon" aria-hidden="true">↗</span>
+              </a>
+            </li>
+            <li hidden>
               <a class="prototype-link" href="%D0%9E%D0%B1%D0%BD%D0%BE%D0%B2%D0%BB%D1%8F%D0%B5%D0%BC%D1%8B%D0%B5%20%D0%B1%D0%BB%D0%BE%D0%BA%D0%B8/%D0%A5%D0%B5%D0%B4%D0%B5%D1%80.html" target="_blank" rel="noopener">
                 <span>
                   <span class="prototype-title">Хедер</span>
@@ -293,7 +309,7 @@
                 <span class="new-tab-icon" aria-hidden="true">↗</span>
               </a>
             </li>
-            <li>
+            <li hidden>
               <a class="prototype-link" href="%D0%9E%D0%B1%D0%BD%D0%BE%D0%B2%D0%BB%D1%8F%D0%B5%D0%BC%D1%8B%D0%B5%20%D0%B1%D0%BB%D0%BE%D0%BA%D0%B8/%D0%9C%D0%BE%D0%B1%D0%B8%D0%BB%D1%8C%D0%BD%D0%B0%D1%8F%20%D0%BD%D0%B0%D0%B2%D0%B8%D0%B3%D0%B0%D1%86%D0%B8%D1%8F.html" target="_blank" rel="noopener">
                 <span>
                   <span class="prototype-title">Мобильная навигация</span>
@@ -302,7 +318,7 @@
                 <span class="new-tab-icon" aria-hidden="true">↗</span>
               </a>
             </li>
-            <li>
+            <li hidden>
               <a class="prototype-link" href="%D0%9E%D0%B1%D0%BD%D0%BE%D0%B2%D0%BB%D1%8F%D0%B5%D0%BC%D1%8B%D0%B5%20%D0%B1%D0%BB%D0%BE%D0%BA%D0%B8/%D0%A4%D1%83%D1%82%D0%B5%D1%80.html" target="_blank" rel="noopener">
                 <span>
                   <span class="prototype-title">Футер</span>
@@ -311,7 +327,7 @@
                 <span class="new-tab-icon" aria-hidden="true">↗</span>
               </a>
             </li>
-            <li>
+            <li hidden>
               <a class="prototype-link" href="%D0%9E%D0%B1%D0%BD%D0%BE%D0%B2%D0%BB%D1%8F%D0%B5%D0%BC%D1%8B%D0%B5%20%D0%B1%D0%BB%D0%BE%D0%BA%D0%B8/%D0%A2%D0%BE%D0%B2%D0%B0%D1%80%D0%BD%D0%B0%D1%8F%20%D0%BA%D0%B0%D1%80%D1%82%D0%BE%D1%87%D0%BA%D0%B0%20%D0%B2%20%D0%B2%D1%8B%D0%B4%D0%B0%D1%87%D0%B5.html" target="_blank" rel="noopener">
                 <span>
                   <span class="prototype-title">Товарная карточка в выдаче</span>
@@ -320,7 +336,7 @@
                 <span class="new-tab-icon" aria-hidden="true">↗</span>
               </a>
             </li>
-            <li>
+            <li hidden>
               <a class="prototype-link" href="%D0%9E%D0%B1%D0%BD%D0%BE%D0%B2%D0%BB%D1%8F%D0%B5%D0%BC%D1%8B%D0%B5%20%D0%B1%D0%BB%D0%BE%D0%BA%D0%B8/%D0%A4%D0%B8%D0%BB%D1%8C%D1%82%D1%80%D1%8B%20%D0%BA%D0%B0%D1%82%D0%B0%D0%BB%D0%BE%D0%B3%D0%B0.html" target="_blank" rel="noopener">
                 <span>
                   <span class="prototype-title">Фильтры каталога</span>
@@ -329,7 +345,7 @@
                 <span class="new-tab-icon" aria-hidden="true">↗</span>
               </a>
             </li>
-            <li>
+            <li hidden>
               <a class="prototype-link" href="%D0%9E%D0%B1%D0%BD%D0%BE%D0%B2%D0%BB%D1%8F%D0%B5%D0%BC%D1%8B%D0%B5%20%D0%B1%D0%BB%D0%BE%D0%BA%D0%B8/%D0%91%D0%BB%D0%BE%D0%BA%20%D0%BF%D0%BE%D0%BA%D1%83%D0%BF%D0%BA%D0%B8%20%D0%B2%20%D0%BA%D0%B0%D1%80%D1%82%D0%BE%D1%87%D0%BA%D0%B5%20%D1%82%D0%BE%D0%B2%D0%B0%D1%80%D0%B0.html" target="_blank" rel="noopener">
                 <span>
                   <span class="prototype-title">Блок покупки в карточке товара</span>
@@ -338,7 +354,7 @@
                 <span class="new-tab-icon" aria-hidden="true">↗</span>
               </a>
             </li>
-            <li>
+            <li hidden>
               <a class="prototype-link" href="%D0%9E%D0%B1%D0%BD%D0%BE%D0%B2%D0%BB%D1%8F%D0%B5%D0%BC%D1%8B%D0%B5%20%D0%B1%D0%BB%D0%BE%D0%BA%D0%B8/%D0%A5%D0%B0%D1%80%D0%B0%D0%BA%D1%82%D0%B5%D1%80%D0%B8%D1%81%D1%82%D0%B8%D0%BA%D0%B8%20%D0%B2%20%D0%BA%D0%B0%D1%80%D1%82%D0%BE%D1%87%D0%BA%D0%B5%20%D1%82%D0%BE%D0%B2%D0%B0%D1%80%D0%B0.html" target="_blank" rel="noopener">
                 <span>
                   <span class="prototype-title">Характеристики в карточке товара</span>

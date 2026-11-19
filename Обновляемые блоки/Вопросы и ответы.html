@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Вопросы и ответы — прототип блока «Весна»</title>
+  <link rel="stylesheet" href="../Страницы/личный-кабинет.css">
+  <style>
+    body { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr auto; min-height: 100vh; }
+    .preview { align-items: baseline; margin-bottom: 32px; }
+    .preview a { text-underline-offset: 3px; }
+    .faq { max-width: 1000px; margin-inline: auto; }
+    .faq h1 { margin-bottom: 24px; }
+    .faq-list { border: 1px solid #888; }
+    .faq-item + .faq-item { border-top: 1px solid #888; }
+    .faq-item summary {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 24px;
+      align-items: center;
+      gap: 24px;
+      min-height: 72px;
+      padding: 20px 24px;
+      list-style: none;
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .faq-item summary::-webkit-details-marker { display: none; }
+    .faq-item summary::after { content: "+"; flex: 0 0 24px; font-size: 26px; text-align: center; }
+    .faq-item[open] summary { background: #eee; }
+    .faq-item[open] summary::after { content: "−"; }
+    .faq-item summary:hover { background: #f3f3f3; }
+    .faq-item summary:focus-visible { outline-offset: -4px; }
+    .faq-answer { padding: 0 24px 24px; background: #eee; }
+    .faq-answer p { max-width: 820px; }
+    .faq-answer a { text-underline-offset: 3px; }
+    @media (max-width: 600px) {
+      .preview { margin-bottom: 20px; }
+      .faq-item summary { gap: 16px; padding: 16px; font-size: 16px; }
+      .faq-answer { padding: 0 16px 20px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="placeholder">хедер</header>
+  <main class="frame">
+    <div class="preview">
+      <a href="../index.html">К списку прототипов</a>
+      <span class="muted">Отдельный блок · Примеры текстов для согласования</span>
+    </div>
+    <section class="faq" aria-labelledby="faq-title">
+      <h1 id="faq-title">Вопросы и ответы</h1>
+      <div class="faq-list">
+        <details class="faq-item" name="faq" open>
+          <summary>Как оформить заказ на куклу или одежду для неё?</summary>
+          <div class="faq-answer">
+            <p>Добавьте выбранные товары в корзину, проверьте их количество и нажмите «Оформить заказ». Выберите город, способ получения и пункт выдачи, затем заполните данные покупателя и подтвердите заказ.</p>
+            <p><a href="../Страницы/Корзина.html">Перейти в корзину</a></p>
+          </div>
+        </details>
+        <details class="faq-item" name="faq">
+          <summary>Как можно оплатить заказ?</summary>
+          <div class="faq-answer">
+            <p>Заказ можно оплатить банковской картой онлайн. Сумма товаров, стоимость доставки и итог отображаются при оформлении заказа.</p>
+          </div>
+        </details>
+        <details class="faq-item" name="faq">
+          <summary>Какие способы получения доступны?</summary>
+          <div class="faq-answer">
+            <p>Самовывоз со склада фабрики, СДЭК, Яндекс Доставка, 5Post и Почта России. При оформлении выберите удобный способ получения и пункт на карте. Адрес и график работы появятся при нажатии на маркер.</p>
+          </div>
+        </details>
+        <details class="faq-item" name="faq">
+          <summary>Где посмотреть статус моего заказа?</summary>
+          <div class="faq-answer">
+            <p>Откройте «Текущие заказы» в личном кабинете. Нажмите «Подробнее о заказе», чтобы посмотреть его состав и сведения об оплате и доставке.</p>
+            <p><a href="../Страницы/Текущие заказы.html">Открыть текущие заказы</a></p>
+          </div>
+        </details>
+        <details class="faq-item" name="faq">
+          <summary>Как подобрать одежду для куклы?</summary>
+          <div class="faq-answer">
+            <p>Сверьте название серии и рост вашей куклы с описанием комплекта одежды. Например, при выборе наряда для куклы Мирэя проверьте, для какой модели он предназначен.</p>
+          </div>
+        </details>
+        <details class="faq-item" name="faq">
+          <summary>Где найти рекомендации по уходу за куклой?</summary>
+          <div class="faq-answer">
+            <p>Посмотрите инструкцию к вашей модели куклы. Следуйте указанным в ней рекомендациям по уходу за волосами, одеждой и механизмами игрушки.</p>
+          </div>
+        </details>
+      </div>
+    </section>
+  </main>
+  <footer class="placeholder">футер</footer>
+</body>
+</html>
