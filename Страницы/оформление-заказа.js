@@ -24,7 +24,6 @@ function initializeCheckout() {
     '5post': { name: '5Post', description: 'Заберите заказ в выбранном пункте выдачи 5Post.', amount: 300, timing: '2–4 дня', pointLabel: 'Пункт выдачи 5Post' },
     post: { name: 'Почта России', description: 'Заберите заказ в выбранном почтовом отделении.', amount: 450, timing: '4–7 дней', pointLabel: 'Отделение Почты России' },
   };
-  const paymentNames = { card: 'Банковской картой онлайн', invoice: 'По счёту' };
   const indexes = { Киров: '610000', Москва: '101000' };
   const locationSelect = form.elements.location;
   const city = form.elements.city;
@@ -40,7 +39,6 @@ function initializeCheckout() {
   const deliveryInfo = document.querySelector('#delivery-info');
   const addressFields = document.querySelector('#address-fields');
   const companyFields = document.querySelector('#company-fields');
-  const invoiceOption = document.querySelector('#invoice-option');
   const submit = form.querySelector('[type="submit"]');
   const format = value => orderMoney.format(value);
   const fieldValue = name => form.elements[name].value.trim();
@@ -180,15 +178,9 @@ function initializeCheckout() {
     document.querySelector('#total').textContent = format(subtotal + (method?.amount ?? 0));
   }
 
-  function refreshPayment() {
+  function refreshPayer() {
     const isCompany = fieldValue('payer') === 'company';
-    const invoice = invoiceOption.querySelector('input');
     setFieldAvailability(companyFields, companyFields, isCompany);
-    setFieldAvailability(invoiceOption, invoice, isCompany);
-    if (!isCompany && invoice.checked) form.elements.payment.value = 'card';
-    document.querySelector('#payment-info').textContent = fieldValue('payment') === 'invoice'
-      ? 'Реквизиты для оплаты будут указаны в счёте.'
-      : 'Оплата после подтверждения заказа.';
   }
 
   function summaryFor(index) {
@@ -201,7 +193,7 @@ function initializeCheckout() {
       const point = points.find(item => item.address === pickupPoint.value);
       return [method.name, format(method.amount), point?.name, point?.address, point?.hours].filter(Boolean).join(' · ');
     }
-    if (index === 3) return paymentNames[fieldValue('payment')];
+    if (index === 3) return 'Банковской картой онлайн';
     return fieldValue('recipient');
   }
 
@@ -247,7 +239,7 @@ function initializeCheckout() {
       invalidateDelivery();
       refreshDelivery();
     }
-    if (name === 'payer' || name === 'payment') refreshPayment();
+    if (name === 'payer') refreshPayer();
   });
 
   steps.forEach((step, index) => {
@@ -280,7 +272,7 @@ function initializeCheckout() {
 
   refreshPickup();
   refreshDelivery();
-  refreshPayment();
+  refreshPayer();
   openStep(0, false);
   submit.disabled = false;
 }
